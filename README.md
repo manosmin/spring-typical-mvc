@@ -8,6 +8,10 @@
 
 A typical MVC application for bookstore management with OAuth 2.0 authentication.
 
+## Live Demo
+
+The application is deployed on Heroku: [https://spring-typical-mvc-3e7effb6d789.herokuapp.com](https://spring-typical-mvc-3e7effb6d789.herokuapp.com)
+
 ## Tech Stack
 
 - **Spring Boot 3.5.8** - Spring Data JPA, Spring Security, OAuth 2.0
