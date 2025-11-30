@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rentals</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>My Rentals</h1>
+            <a th:href="@{/}" class="btn-secondary">Back to Home</a>
+        </div>
+
+        <div class="view-toggle">
+            <a th:href="@{/rentals(view=${'rented'})}"
+               th:classappend="${currentView == 'rented'} ? 'active' : ''"
+               class="btn-toggle">Renting</a>
+            <a th:href="@{/rentals(view=${'rented-out'})}"
+               th:classappend="${currentView == 'rented-out'} ? 'active' : ''"
+               class="btn-toggle">Rented Out</a>
+        </div>
+
+        <div class="rentals-list" th:if="${rentals != null and !rentals.isEmpty()}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Author</th>
+                        <th th:if="${currentView == 'rented'}">Owner</th>
+                        <th th:if="${currentView == 'rented-out'}">Rented To</th>
+                        <th>Rental Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rental : ${rentals}">
+                        <td th:text="${rental.book.title}"></td>
+                        <td th:text="${rental.book.author}"></td>
+                        <td th:if="${currentView == 'rented'}" th:text="${rental.owner.name}"></td>
+                        <td th:if="${currentView == 'rented-out'}" th:text="${rental.renter.name}"></td>
+                        <td th:text="${#temporals.format(rental.rentalDate, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td>
+                            <span th:if="${rental.status.name() == 'ACTIVE'}" class="badge-active">Active</span>
+                            <span th:if="${rental.status.name() == 'RETURNED'}" class="badge-returned">Returned</span>
+                        </td>
+                        <td class="actions-cell">
+                            <form th:if="${rental.status.name() == 'ACTIVE' && rental.owner.id != currentUserId}"
+                                  th:action="@{/rentals/return/{id}(id=${rental.id})}"
+                                  method="post"
+                                  style="display: inline;">
+                                <button type="submit" class="btn-primary">Return</button>
+                            </form>
+                            <span th:unless="${rental.status.name() == 'ACTIVE'}" class="text-muted">
+                                Returned on <span th:text="${#temporals.format(rental.returnDate, 'yyyy-MM-dd HH:mm')}"></span>
+                            </span>
+                            <span th:if="${rental.status.name() == 'ACTIVE' && rental.owner.id == currentUserId }" class="text-muted">
+                                —
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" th:if="${rentals == null or rentals.isEmpty()}">
+            <p th:text="${currentView == 'rented'} ? 'You are not renting any books' : 'You have not rented out any books'"></p>
+        </div>
+    </div>
+</body>
+</html>

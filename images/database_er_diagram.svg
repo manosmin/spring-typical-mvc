@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+  <defs>
+    <style>
+      .table-box { fill: #1e1e1e; stroke: #4a9eff; stroke-width: 2; }
+      .table-header { fill: #2d5a8c; stroke: #4a9eff; stroke-width: 2; }
+      .table-name { fill: #ffffff; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 18px; font-weight: bold; }
+      .column-text { fill: #e0e0e0; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; }
+      .pk-text { fill: #ff6b6b; font-weight: bold; }
+      .fk-text { fill: #4ecdc4; }
+      .relationship-line { stroke: #95a5a6; stroke-width: 2; fill: none; }
+      .crow-foot { stroke: #95a5a6; stroke-width: 2; fill: none; }
+    </style>
+  </defs>
+  
+  <!-- Dark background -->
+  <rect width="1000" height="700" fill="#0d1117"/>
+  
+  <!-- USERS Table -->
+  <g id="users-table">
+    <rect class="table-header" x="50" y="50" width="300" height="40" rx="5"/>
+    <text class="table-name" x="200" y="77" text-anchor="middle">USERS</text>
+    <rect class="table-box" x="50" y="90" width="300" height="180" rx="5"/>
+    <text class="column-text pk-text" x="60" y="110">🔑 id: BIGSERIAL</text>
+    <text class="column-text" x="60" y="135">   auth0_subject_id: VARCHAR(255)</text>
+    <text class="column-text" x="60" y="160">   name: VARCHAR(255)</text>
+    <text class="column-text" x="60" y="185">   email: VARCHAR(255)</text>
+    <text class="column-text" x="60" y="210">   picture: VARCHAR(500)</text>
+    <text class="column-text" x="60" y="235">   created_at: TIMESTAMP</text>
+  </g>
+  
+  <!-- BOOKS Table -->
+  <g id="books-table">
+    <rect class="table-header" x="50" y="350" width="300" height="40" rx="5"/>
+    <text class="table-name" x="200" y="377" text-anchor="middle">BOOKS</text>
+    <rect class="table-box" x="50" y="390" width="300" height="180" rx="5"/>
+    <text class="column-text pk-text" x="60" y="410">🔑 id: BIGSERIAL</text>
+    <text class="column-text" x="60" y="435">   title: VARCHAR(255)</text>
+    <text class="column-text" x="60" y="460">   author: VARCHAR(255)</text>
+    <text class="column-text" x="60" y="485">   description: TEXT</text>
+    <text class="column-text" x="60" y="510">   year: INT</text>
+    <text class="column-text fk-text" x="60" y="535">🔗 user_id: BIGINT → users(id)</text>
+  </g>
+  
+  <!-- RENTALS Table -->
+  <g id="rentals-table">
+    <rect class="table-header" x="550" y="200" width="400" height="40" rx="5"/>
+    <text class="table-name" x="750" y="227" text-anchor="middle">RENTALS</text>
+    <rect class="table-box" x="550" y="240" width="400" height="220" rx="5"/>
+    <text class="column-text pk-text" x="560" y="260">🔑 id: BIGSERIAL</text>
+    <text class="column-text fk-text" x="560" y="285">🔗 book_id: BIGINT → books(id)</text>
+    <text class="column-text fk-text" x="560" y="310">🔗 owner_id: BIGINT → users(id)</text>
+    <text class="column-text fk-text" x="560" y="335">🔗 renter_id: BIGINT → users(id)</text>
+    <text class="column-text" x="560" y="360">   rental_date: TIMESTAMP</text>
+    <text class="column-text" x="560" y="385">   return_date: TIMESTAMP</text>
+    <text class="column-text" x="560" y="410">   status: VARCHAR(50)</text>
+    <text class="column-text" x="560" y="435" font-size="11" fill="#95a5a6">   (ACTIVE or RETURNED)</text>
+  </g>
+  
+  <!-- Relationship: USERS to BOOKS (one-to-many) -->
+  <path class="relationship-line" d="M 200 270 L 200 350"/>
+  <!-- Many indicator (crow's foot) at BOOKS end -->
+  <path class="crow-foot" d="M 195 350 L 200 340 L 205 350"/>
+  <path class="crow-foot" d="M 195 350 L 200 345 L 205 350"/>
+  <!-- One indicator at USERS end -->
+  <circle cx="200" cy="270" r="4" fill="#0d1117" stroke="#95a5a6" stroke-width="2"/>
+  <text class="column-text" x="210" y="310" fill="#95a5a6" font-size="12">owns</text>
+  
+  <!-- Relationship: BOOKS to RENTALS (one-to-many) -->
+  <path class="relationship-line" d="M 350 450 L 550 315"/>
+  <!-- Many indicator (crow's foot) at RENTALS end -->
+  <path class="crow-foot" d="M 550 320 L 545 312 L 553 308"/>
+  <path class="crow-foot" d="M 550 315 L 545 310 L 553 305"/>
+  <!-- One indicator at BOOKS end -->
+  <circle cx="350" cy="450" r="4" fill="#0d1117" stroke="#95a5a6" stroke-width="2"/>
+  <text class="column-text" x="430" y="370" fill="#95a5a6" font-size="12">rented in</text>
+  
+  <!-- Relationship: USERS to RENTALS (owner_id) (one-to-many) -->
+  <path class="relationship-line" d="M 350 150 L 550 280"/>
+  <!-- Many indicator (crow's foot) at RENTALS end -->
+  <path class="crow-foot" d="M 550 275 L 543 280 L 547 288"/>
+  <path class="crow-foot" d="M 550 280 L 545 282 L 547 290"/>
+  <!-- One indicator at USERS end -->
+  <circle cx="350" cy="150" r="4" fill="#0d1117" stroke="#95a5a6" stroke-width="2"/>
+  <text class="column-text" x="420" y="200" fill="#95a5a6" font-size="12">owner</text>
+  
+  <!-- Relationship: USERS to RENTALS (renter_id) (one-to-many) -->
+  <path class="relationship-line" d="M 350 200 L 550 320"/>
+  <!-- Many indicator (crow's foot) at RENTALS end -->
+  <path class="crow-foot" d="M 550 315 L 543 318 L 548 326"/>
+  <path class="crow-foot" d="M 550 320 L 545 322 L 548 330"/>
+  <!-- One indicator at USERS end -->
+  <circle cx="350" cy="200" r="4" fill="#0d1117" stroke="#95a5a6" stroke-width="2"/>
+  <text class="column-text" x="420" y="250" fill="#95a5a6" font-size="12">renter</text>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="50" y="620" width="300" height="70" fill="#1e1e1e" stroke="#4a9eff" stroke-width="1" rx="5"/>
+    <text class="column-text" x="60" y="640" font-weight="bold">Legend:</text>
+    <text class="column-text pk-text" x="60" y="660">🔑 Primary Key</text>
+    <text class="column-text fk-text" x="60" y="680">🔗 Foreign Key</text>
+    <circle cx="380" cy="635" r="4" fill="#0d1117" stroke="#95a5a6" stroke-width="2"/>
+    <text class="column-text" x="390" y="640" fill="#95a5a6">One</text>
+    <path class="crow-foot" d="M 375 660 L 380 650 L 385 660" stroke="#95a5a6" stroke-width="2" fill="none"/>
+    <text class="column-text" x="390" y="665" fill="#95a5a6">Many</text>
+  </g>
+</svg>

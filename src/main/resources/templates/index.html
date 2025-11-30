@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-section" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/oauth2/authorization/okta}">Enter</a>
+        </div>
+        <div class="profile-section" sec:authorize="isAuthenticated()">
+            <h2 th:text="${profile.get('name')}" style="margin-bottom: 20px"></h2>
+            <img th:src="${profile.get('picture')}" th:attr="alt=${profile.get('name')}" alt="Profile Image"/>
+            <p th:text="${profile.get('email')}"></p>
+            <div class="nav-links">
+                <a class="btn-primary" th:href="@{/books(view=${'all'})}">Manage Library</a>
+                <a class="btn-primary" th:href="@{/rentals(view=${'rented'})}">My Rentals</a>
+            </div>
+            <a class="logout-btn" th:href="@{/logout}">Log Out</a>
+        </div>
+    </div>
+</body>
+</html>
